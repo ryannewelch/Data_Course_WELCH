@@ -1,6 +1,7 @@
 library(tidyverse)
 library(gganimate)
 library(lubridate)
+library(transformr)
 
 
 
@@ -91,17 +92,17 @@ co2_df %>% glimpse
 co2_df %>% 
   ggplot(aes(x=date,y=ppm)) +
   geom_line() +
-  transition_time(date) +
+  transition_time(year) +
   labs(title = "{frame_time}")
 
 # transition_reveal() works similar to transition_time() but leaves previously shown data
 co2_df %>% 
   ggplot(aes(x=date,y=ppm)) +
   geom_line() +
-  transition_time(date) +
+  transition_reveal(date) +
   labs(title = "Date: {frame_along}")
 
-
+anim_save(animation=myco2_animation,file = "./co2.gif")
 
 
 # make an interactive plot with plotly package
