@@ -1,0 +1,110 @@
+---
+title: "Grad School Admissions"
+author: "Ryanne Welch"
+date: "2022-10-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning=FALSE)
+```
+
+Here we will be exploring grad school admissions data.
+
+Below is a glimpse of the dataset.
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+theme_set(theme_bw())
+
+df <- read_csv("../../Data/GradSchool_Admissions.csv")
+
+df %>%head() %>% 
+  kable() %>% 
+  kable_classic_2(lightable_options = 'hover')
+```
+
+##Plots##
+
+**GPA's affect on rank**
+```{r,fig.height=4, fig.width=4}
+p1 <- df %>% 
+  ggplot(aes(x=rank,y=gpa,color=factor(rank)))+
+  geom_violin()+
+  labs(color="rank")
+
+plotly::ggplotly(p1)
+
+```
+
+---
+
+**GRE score affect on rank**
+```{r,fig.height=4, fig.width=4}
+p2 <- df %>% 
+  ggplot(aes(x=rank,y=gre,color=factor(rank)))+
+  geom_violin()+
+  labs(color="rank")
+
+plotly::ggplotly(p2)
+```
+
+---
+
+**Rank's affect on admittance**
+
+```{r,fig.height=4, fig.width=4}
+p3 <- df %>% 
+  ggplot(aes(x=admit,y=rank,color=factor(admit)))+
+  geom_violin()+
+  labs(color="admit")
+
+plotly::ggplotly(p3)
+```
+
+---
+
+**GRE vs GPA**
+
+```{r,fig.height=4, fig.width=4,fig.cap="The better the gpa, the better the gre score."}
+p4 <- df %>% 
+  ggplot(aes(x=gpa,y=gre))+
+  geom_point()+geom_smooth()
+
+plotly::ggplotly(p4)
+
+```
+
+---
+
+##Models##
+
+```{r}
+mod1 <- 
+  glm(data=df,
+      formula=admit~gre*gpa)
+
+form <- formula(mod1)
+```
+
+**Our model formula is:**
+
+```{r}
+form
+```
+
+---
+
+**Model Output Table**
+
+```{r}
+broom::tidy(mod1) %>% 
+  kable() %>% 
+  kable_classic_2(lightable_options = 'hover')
+```
+
+
+```{r fig.align='center',fig.height=3,fig.width=5}
+knitr::include_graphics("grad_cap.jpeg")
+```

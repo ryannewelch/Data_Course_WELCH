@@ -59,3 +59,4 @@ gather_predictions(a,mod1,mod2,mod3) %>%
   ggplot(aes(x=year, y=pred, color=continent))+
   geom_path()+
   facet_wrap(~model)
+
